@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f8f4">
+  <meta name="description" content="Registra tus comidas con una foto, controla tu balance diario y sigue la evolución de tu peso.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="NutriFoto">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>NutriFoto · Mi diario</title>
+</head>
+<body>
+  <div id="app" class="app">
+    <header class="topbar">
+      <div class="brand"><span class="brandmark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="2.4"/><path d="M10 18c2.8 0 3.2 5 6 5s3.2-5 6-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M20.5 9c-4.1.1-6.6 2.6-6.2 6.2 3.7.4 6.2-2.1 6.2-6.2Z" fill="currentColor"/></svg></span><span>nutri<span class="brandthin">foto</span></span></div>
+      <button id="settingsButton" class="icon-btn" type="button" aria-label="Ajustes" title="Ajustes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.1.1-2 2-.1-.1a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.54V21h-2.8v-.92a1.7 1.7 0 0 0-1-1.54 1.7 1.7 0 0 0-1.87.34l-.1.1-2-2 .1-.1A1.7 1.7 0 0 0 7.54 15 1.7 1.7 0 0 0 6 14H5v-2.8h1a1.7 1.7 0 0 0 1.54-1 1.7 1.7 0 0 0-.34-1.87l-.1-.1 2-2 .1.1A1.7 1.7 0 0 0 11.07 6a1.7 1.7 0 0 0 1-1.54V3.5h2.8v.96a1.7 1.7 0 0 0 1 1.54 1.7 1.7 0 0 0 1.87-.34l.1-.1 2 2-.1.1a1.7 1.7 0 0 0-.34 1.87c.26.6.86 1 1.54 1h.96V14h-.96c-.68 0-1.28.4-1.54 1Z" transform="translate(-1 -.5) scale(.96)"/></svg></button>
+    </header>
+
+    <main id="screen-today" class="screen active">
+      <div class="page-eyebrow" id="todayDate">HOY</div>
+      <h1 class="page-title">Tu día, a tu ritmo<span class="dot">.</span></h1>
+      <p class="subtitle">Cada comida cuenta, sin complicaciones.</p>
+      <section class="balance-card" aria-label="Resumen de calorías">
+        <div class="balance-copy"><span class="muted-on-dark">TU BALANCE DE HOY</span><div class="big-cal" id="consumedCals">0 <small>kcal</small></div><div class="balance-bottom" id="remainingLabel">Establece tu límite diario</div><span class="goal-caption" id="dailyGoalLine"></span></div>
+        <div id="ring" class="ring"><div class="ring-inside"><span id="ringPercent">0%</span><small>del límite</small></div></div>
+        <div class="balance-glow"></div>
+      </section>
+      <div class="cta-grid"><button id="photoButton" class="cta cta-primary"><span class="cta-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 7h3l1.7-2h6.6L17 7h3a1.5 1.5 0 0 1 1.5 1.5v10A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-10A1.5 1.5 0 0 1 4 7Z"/><circle cx="12" cy="13" r="3.4"/></svg></span><span><strong>Hacer una foto</strong><small>Estimar con IA</small></span><span class="cta-arrow">↗</span></button><button id="manualButton" class="cta cta-secondary"><span class="cta-icon">＋</span><span><strong>Añadir comida</strong><small>Buscar o escribir</small></span></button></div>
+      <div class="section-header"><h2>Mi diario</h2><span id="entryCount" class="section-muted">0 alimentos</span></div>
+      <div id="todayMeals" class="meal-list"></div>
+      <div class="tipline"><span>✦</span> Las estimaciones por foto son aproximadas. Ajusta los gramos según tu ración.</div>
+    </main>
+
+    <main id="screen-history" class="screen" hidden>
+      <div class="page-eyebrow">TU EVOLUCIÓN</div><h1 class="page-title">Cada día suma<span class="dot">.</span></h1><p class="subtitle">Consulta lo que has registrado anteriormente.</p>
+      <div class="section-header"><h2>Últimos 7 días</h2><span class="section-muted">kcal/día</span></div>
+      <div class="panel history-panel"><div id="historyChart" class="bar-chart" aria-label="Calorías de los últimos 7 días"></div><div class="bar-chart-labels" id="historyLabels"></div></div>
+      <div class="section-header"><h2>Consultar un día</h2></div>
+      <div class="panel day-selector"><button id="prevDay" class="date-arrow" aria-label="Día anterior">‹</button><div><div id="historySelectedTitle" class="date-title">Hoy</div><div class="section-muted" id="historySelectedTotal">0 kcal</div></div><button id="nextDay" class="date-arrow" aria-label="Día siguiente">›</button></div>
+      <div id="historyMeals" class="meal-list"></div>
+    </main>
+
+    <main id="screen-weight" class="screen" hidden>
+      <div class="page-eyebrow">BIENESTAR</div><h1 class="page-title">Tu progreso<span class="dot">.</span></h1><p class="subtitle">Un registro sencillo de tu peso.</p>
+      <div class="weight-summary"><div class="panel stat-card"><div class="stat-overline">ÚLTIMO PESO</div><div class="stat-value" id="weightCurrent">— <small>kg</small></div><div class="stat-foot" id="weightCurrentDate">Sin registros</div></div><div class="panel stat-card"><div class="stat-overline">CAMBIO TOTAL</div><div class="stat-value" id="weightDelta">— <small>kg</small></div><div class="stat-foot">Desde el primer registro</div></div></div>
+      <div class="panel weight-chart-panel"><div class="section-header inner"><h2>Evolución</h2><span id="weightPoints" class="section-muted">0 registros</span></div><div id="weightGraph" class="graph-wrap"></div></div>
+      <form id="weightForm" class="panel weight-form"><h2>Añadir peso</h2><div class="form-row"><label>Peso <span>(kg)</span><input id="weightInput" inputmode="decimal" type="number" min="1" max="500" step="0.1" placeholder="Ej. 72,5" required></label><label>Fecha<input id="weightDate" type="date" required></label></div><button type="submit" class="full-button">Guardar peso <span>→</span></button></form>
+      <div class="section-header"><h2>Registros</h2></div><div id="weightEntries" class="weight-entry-list"></div>
+    </main>
+
+    <main id="screen-settings" class="screen" hidden>
+      <div class="page-eyebrow">PREFERENCIAS</div><h1 class="page-title">A tu manera<span class="dot">.</span></h1><p class="subtitle">Tú decides tus objetivos y tus datos.</p>
+      <form id="goalForm" class="panel setting-panel"><div class="setting-title"><span class="setting-emoji">🎯</span><div><h2>Límite diario</h2><p>El máximo de calorías que quieres registrar.</p></div></div><label class="field-label" for="goalInput">Calorías por día</label><div class="unit-input"><input type="number" id="goalInput" inputmode="numeric" min="1" max="20000" step="1" required placeholder="Ej. 2000"><span>kcal</span></div><button type="submit" class="full-button">Guardar límite <span>→</span></button><p class="fineprint">Este límite es una preferencia de seguimiento, no una recomendación nutricional.</p></form>
+      <div class="panel setting-panel"><div class="setting-title"><span class="setting-emoji">🔐</span><div><h2>Tus datos, bajo control</h2><p>El diario y el peso se guardan en este dispositivo. Las fotos se procesan localmente y no se conservan.</p></div></div><button id="exportButton" class="outline-button">Exportar copia de seguridad <span>↗</span></button><label for="importInput" class="outline-button import-label">Importar copia de seguridad <span>↗</span></label><input id="importInput" type="file" accept="application/json,.json" hidden><button id="eraseButton" class="text-danger">Eliminar todos mis datos</button></div>
+      <div class="panel setting-panel"><div class="setting-title"><span class="setting-emoji">✨</span><div><h2>Cómo funciona la foto</h2><p>Un modelo Food-101 identifica el plato más parecido entre 101 categorías. Calculamos las calorías con valores aproximados por 100 g y una ración editable. No detecta con precisión ingredientes, aceites ni cantidades.</p></div></div><p class="fineprint">Para usar el reconocimiento por primera vez necesitas conexión y descargar el modelo (aprox. 90 MB). Si la IA falla, puedes añadir el alimento manualmente, gratis.</p></div>
+      <p class="credit">NutriFoto · Sin cuentas, anuncios ni suscripciones.</p>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navegación principal"><button class="nav-button selected" data-tab="today" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10Z"/></svg><span>Hoy</span></button><button class="nav-button" data-tab="history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M7 14h3m4 0h3"/></svg><span>Historial</span></button><button class="nav-button" data-tab="weight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 9h8M12 9v4m-3-4 1 2m5-2-1 2"/></svg><span>Peso</span></button><button class="nav-button" data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></svg><span>Ajustes</span></button></nav>
+  </div>
+
+  <div id="foodOverlay" class="overlay" hidden role="presentation"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="foodDialogTitle"><div class="sheet-handle"></div><div class="sheet-head"><div><div class="page-eyebrow" id="foodDialogEyebrow">NUEVA COMIDA</div><h2 id="foodDialogTitle">Añadir alimento</h2></div><button id="closeFood" class="close-btn" aria-label="Cerrar">×</button></div><div class="sheet-scroll">
+    <div id="photoArea" class="photo-area" hidden><img id="photoPreview" alt="Fotografía de la comida"><div id="aiStatus" class="ai-status"><span class="spinner" id="aiSpinner"></span><span id="aiStatusText">Preparando imagen…</span></div><div id="suggestions" class="suggestions" hidden></div></div>
+    <div class="form-field"><label for="foodSearch">¿Qué has comido?</label><input id="foodSearch" type="text" placeholder="Buscar: arroz, pollo, tortilla..." autocomplete="off"><div id="foodMatches" class="food-matches" hidden></div></div>
+    <div class="two-fields"><div class="form-field"><label for="gramsInput">Cantidad (g)</label><input id="gramsInput" type="number" inputmode="decimal" min="1" max="10000" step="1" value="150"></div><div class="form-field"><label for="kcal100Input">kcal / 100 g</label><input id="kcal100Input" type="number" inputmode="decimal" min="1" max="1000" step="1" placeholder="Ej. 160"></div></div>
+    <div class="form-field"><label for="mealSelect">Momento del día</label><select id="mealSelect"><option value="desayuno">Desayuno</option><option value="comida">Comida</option><option value="cena">Cena</option><option value="snack">Entre horas</option></select></div>
+    <div class="kcal-preview"><span>Calorías estimadas</span><strong><span id="previewKcal">—</span> kcal</strong></div><p class="sheet-note">La cantidad no puede determinarse de forma fiable solo con una fotografía. Comprueba los gramos antes de guardar.</p>
+  </div><div class="sheet-footer"><button id="saveFood" class="full-button">Añadir al diario <span>→</span></button></div></div></div>
+  <input id="cameraInput" type="file" accept="image/*" capture="environment" hidden><input id="galleryInput" type="file" accept="image/*" hidden>
+  <div id="captureChooser" class="overlay overlay-chooser" hidden><div class="chooser panel"><div class="chooser-title"><h2>Fotografía tu comida</h2><button id="closeChooser" class="close-btn" aria-label="Cerrar">×</button></div><p class="subtitle">Haz una foto o elige una que ya tengas.</p><button id="takePhoto" class="choice"><span>📷</span><strong>Abrir cámara</strong><span>→</span></button><button id="choosePhoto" class="choice"><span>🖼️</span><strong>Elegir de Fotos</strong><span>→</span></button></div></div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
